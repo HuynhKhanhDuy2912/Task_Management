@@ -1,0 +1,213 @@
+/* --- Global base --- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  margin: 0;
+  background-color: #f4f6f8;
+  color: #333;
+}
+
+/* --- Form containers --- */
+.form-container {
+  max-width: 400px;
+  margin: 50px auto;
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+input,
+textarea,
+button {
+  font: inherit;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+/* --- Buttons --- */
+button {
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+  cursor: pointer;
+}
+
+/* --- Layout --- */
+.dashboard {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  position: fixed;      
+  top: 0;              
+  left: 0;              
+  width: 250px;         
+  height: 100vh;        
+  background-color: #fff;
+  border-right: 1px solid #ccc;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;     
+  z-index: 1000;   
+  display: flex;
+  flex-direction: column;     
+}
+
+.main {
+  flex: 1;
+  padding: 2rem;
+  background: #f9f9f9;
+  margin-left: 250px;
+}
+
+/* --- Category form & input --- */
+#add-category-form {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+#new-category {
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+/* --- Category list --- */
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+ul li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid #eee;
+  border-radius: 6px;
+}
+
+ul li:hover {
+  background-color: #d9ecff;
+  cursor: pointer;
+}
+
+.category-name {
+  flex-grow: 1;
+  word-break: break-word;
+}
+
+/* --- Delete category button --- */
+.delete-category-btn {
+  background: transparent;
+  border: none;
+  color: #dc3545;
+  font-size: 1.25rem;
+  font-weight: bold;
+  padding: 0.25rem;
+  cursor: pointer;
+  width: 35px;
+  margin: auto;
+}
+
+.delete-category-btn:hover {
+  background: #ffd6d6;
+  color: #c70000;
+}
+
+/* --- Logout button resets width --- */
+.logout-button {
+  width: 100%;
+  background-color: #e74c3c;
+  margin-top: auto;
+}
+
+.logout-button:hover {
+  background-color: #c0392b;
+}
+
+/* --- Task form styling --- */
+#add-task-form {
+  width: 100%;
+  background: white;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.task-item {
+  padding: 12px;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  background-color: #fefefe;
+}
+
+.task-title {
+  white-space: normal;
+  font-weight: bold;
+  font-family: inherit;
+}
+
+.task-content {
+  white-space: normal;
+  word-break: break-word;
+}
+
+.task-grid {
+  display: grid;
+  grid-template-columns: 200px 1fr 300px;
+  gap: 15px;
+  align-items: start;
+  width: 100%;
+  overflow: hidden;
+}
+
+.task-time {
+  white-space: nowrap;
+  text-align: right;
+  color: #555;
+  overflow: hidden;
+}
+
+.task-item:hover {
+  background-color: #f0f0f0;
+}
+
+/* --- Popup --- */
+.popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.popup-content {
+  background: #fff;
+  max-width: 400px;
+  margin: 10% auto;
+  padding: 1.5rem;
+  border-radius: 10px;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* --- Hidden helper --- */
+.hidden {
+  display: none;
+}

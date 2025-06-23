@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Task Manager</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div id="app"></div>
+
+  <!-- Templates -->
+  <template id="login-template">
+    <div class="form-container">
+      <h2>Login</h2>
+      <form id="login-form">
+        <input type="email" id="login-email" placeholder="Email" required />
+        <input type="password" id="login-password" placeholder="Password" required />
+        <button type="submit">Login</button>
+        <p>Don't have an account? <a href="#" id="go-register">Register</a></p>
+      </form>
+    </div>
+  </template>
+
+  <template id="register-template">
+    <div class="form-container">
+      <h2>Register</h2>
+      <form id="register-form">
+        <input type="text" id="register-username" name="username" placeholder="Username" required />
+        <input type="email" id="register-email" name="email" placeholder="Email" required />
+        <input type="password" id="register-password" name="password" placeholder="Password" required />
+        <button type="submit">Register</button>
+        <p>Already have an account? <a href="#" id="go-login">Login</a></p>
+      </form>
+    </div>
+  </template>
+
+  <template id="dashboard-template">
+    <div class="dashboard">
+      <div class="sidebar">
+        <h3 style="text-align: center;">Task Categories</h3>
+        <ul id="category-list"></ul>
+        <form id="add-category-form">
+          <input type="text" id="new-category" placeholder="New category" required />
+          <button type="submit" id="btn_Add"><i class="fas fa-plus"></i> Add</button>
+        </form>
+        <button id="logout-btn" class="logout-button"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      </div>
+      <div class="main">
+        <h3 id="selected-category-title">Select a category</h3>
+        <label for="month-selector">Chọn tháng:</label>
+        <input style="margin-top: 10px;" type="month" id="month-selector" />
+        <canvas id="task-chart" width="300" height="300" style="margin: 20px auto;"></canvas>
+        <ul id="task-list"></ul>
+        <form id="add-task-form" class="hidden">
+          <input type="text" id="task-title" placeholder="Title" required />
+          <textarea rows="7" id="task-content" placeholder="Content" required></textarea>
+          <table>
+            <tr>
+              <td>
+                <div>Ngày bắt đầu: </div>
+              </td>
+              <td style="padding-top: 15px;">
+                <input type="datetime-local" id="task-start" required />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div>Ngày kết thúc: </div>
+              </td>
+              <td style="padding-top: 15px;">
+                <input type="datetime-local" id="task-end" required />
+              </td>      
+            </tr>   
+          </table>
+          <table>
+          <tr>
+            <td>Done</td>
+            <td style="padding-top: 15px;"><label><input type="checkbox" id="task-done" /></label></td>
+          </tr>
+          </table>
+          <button type="submit" style="width: 100px;">Add Task</button>
+        </form>
+        <div style="max-width: 400px; margin-top: 20px;">
+          <canvas id="task-chart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Popup -->
+    <div id="popup" class="popup hidden">
+      <div class="popup-content">
+        <h3>Task Details</h3>
+        <p id="popup-title"></p>
+        <p id="popup-content"></p>
+        <p id="popup-start"></p>
+        <p id="popup-end"></p>
+        <p id="popup-done"></p>
+        <button id="popup-edit">Edit</button>
+        <button id="popup-delete">Delete</button>
+        <button id="popup-close">Close</button>
+      </div>
+    </div>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
