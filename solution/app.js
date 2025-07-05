@@ -146,12 +146,29 @@ function bindEvents(templateId) {
       }
     };
 
+    const monthSection = document.getElementById("month-section");
+
     if (selectedCategory) {
       document.getElementById("selected-category-title").textContent = selectedCategory.name;
       document.getElementById("add-task-form").classList.remove("hidden");
+      if (monthSection) monthSection.style.display = "block";
+      
+      document.getElementById("overview-chart-container").classList.add("hidden");
+      document.getElementById("category-chart-container").classList.remove("hidden");
+
       displayTasks();
       renderChartForCurrentMonth();
+    } else {
+      document.getElementById("selected-category-title").textContent = "Tổng quan tất cả công việc";
+      document.getElementById("add-task-form").classList.add("hidden");
+      if (monthSection) monthSection.style.display = "none";
+
+      document.getElementById("overview-chart-container").classList.remove("hidden");
+      document.getElementById("category-chart-container").classList.add("hidden");
+
+      renderGlobalChartForYear();
     }
+
 
     const monthInput = document.getElementById("month-selector");
     if (monthInput) {
@@ -173,21 +190,15 @@ async function loadCategories() {
     const data = await res.json();
     categories = data;
 
-    if (selectedCategory) {
-      const match = categories.find(c => c._id === selectedCategory._id);
-      if (match) {
-        await loadTasksByCategory(match._id);
-        return;
-      } else {
-        selectedCategory = null;
-      }
-    }
+    selectedCategory = null; 
 
     render("dashboard-template");
+
   } catch (err) {
     alert("Failed to load categories: " + err.message);
   }
 }
+
 
 async function loadTasksByCategory(categoryId, rerender = true) {
   try {
@@ -204,6 +215,7 @@ async function loadTasksByCategory(categoryId, rerender = true) {
 
     if (rerender){
       render("dashboard-template");
+      displayTasks();
       renderChartForCurrentMonth();
     } 
   } catch (err) {
@@ -236,6 +248,14 @@ async function addCategory(e) {
 function displayCategories() {
   const ul = document.getElementById("category-list");
   ul.innerHTML = "";
+  const overviewLi = document.createElement("li");
+  overviewLi.classList.add("category-item");
+  overviewLi.innerHTML = `<span class="category-name"><i class="fas fa-chart-pie"></i> Tổng quan</span>`;
+  overviewLi.onclick = () => {
+    selectedCategory = null;
+    render("dashboard-template");
+  };
+  ul.appendChild(overviewLi);
 
   categories.forEach(cat => {
     const li = document.createElement("li");
@@ -251,7 +271,7 @@ function displayCategories() {
     span.className = "category-name";
 
     const btn = document.createElement("button");
-    btn.textContent = "✖";
+    btn.innerHTML = '<i class="fas fa-trash-alt"></i>';
     btn.className = "delete-category-btn";
     btn.onclick = async (ev) => {
       ev.stopPropagation();
@@ -278,6 +298,7 @@ function displayCategories() {
     ul.appendChild(li);
   });
 }
+
 
 function displayTasks() {
   const ul = document.getElementById("task-list");
@@ -358,31 +379,33 @@ if (token) {
 function renderChartForCurrentMonth() {
   if (!selectedCategory || !selectedCategory.tasks) return;
 
-  const selectedMonthInput = document.getElementById("month-selector")?.value;
-  const now = selectedMonthInput ? new Date(selectedMonthInput) : new Date();
-  const currentMonth = now.getMonth();
-  const currentYear = now.getFullYear();
+  const monthInput = document.getElementById("month-selector");
+  const selectedMonth = monthInput?.value ? new Date(monthInput.value) : new Date();
+  const month = selectedMonth.getMonth();
+  const year = selectedMonth.getFullYear();
 
-  const tasksInMonth = selectedCategory.tasks.filter(task => {
-    const taskDate = new Date(task.startTime);
-    return taskDate.getMonth() === currentMonth && taskDate.getFullYear() === currentYear;
-  });
+  const completed = selectedCategory.tasks.filter(task => {
+    const d = new Date(task.startTime);
+    return d.getMonth() === month && d.getFullYear() === year && task.done;
+  }).length;
 
-  const doneTasks = tasksInMonth.filter(t => t.done).length;
-  const notDoneTasks = tasksInMonth.length - doneTasks;
+  const notCompleted = selectedCategory.tasks.filter(task => {
+    const d = new Date(task.startTime);
+    return d.getMonth() === month && d.getFullYear() === year && !task.done;
+  }).length;
 
-  const ctx = document.getElementById("task-chart")?.getContext("2d");
+  const ctx = document.getElementById("category-chart")?.getContext("2d");
   if (!ctx) return;
 
-  if (window.taskPieChart) window.taskPieChart.destroy();
+  if (taskChart) taskChart.destroy();
 
-  window.taskPieChart = new Chart(ctx, {
+  taskChart = new Chart(ctx, {
     type: 'pie',
     data: {
       labels: ['Đã hoàn thành', 'Chưa hoàn thành'],
       datasets: [{
-        data: [doneTasks, notDoneTasks],
-        backgroundColor: ['#4CAF50', '#F44336'],
+        data: [completed, notCompleted],
+        backgroundColor: ['#4CAF50', '#F44336']
       }]
     },
     options: {
@@ -390,15 +413,111 @@ function renderChartForCurrentMonth() {
       plugins: {
         title: {
           display: true,
-          text: `Tổng quan công việc tháng ${currentMonth + 1}/${currentYear}`,
+          text: `Tổng quan công việc tháng ${month + 1}/${year}`
         },
         legend: {
-          position: 'bottom',
+          position: 'bottom'
         }
       }
     }
   });
 }
+
+
+async function renderGlobalChartForYear() {
+  const now = new Date();
+  const currentYear = now.getFullYear();
+
+  const monthlyDone = Array(12).fill(0);
+  const monthlyNotDone = Array(12).fill(0);
+
+  for (const category of categories) {
+    try {
+      const res = await fetch(`${API_URL}/categories/${category._id}/tasks`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const tasks = await res.json();
+
+      tasks.forEach(task => {
+        const date = new Date(task.startTime);
+        if (date.getFullYear() === currentYear) {
+          const month = date.getMonth(); // 0 = Jan
+          if (task.done) monthlyDone[month]++;
+          else monthlyNotDone[month]++;
+        }
+      });
+    } catch (err) {
+      console.warn("Lỗi khi tải task của category", category.name);
+    }
+  }
+
+  const ctx = document.getElementById("overview-chart")?.getContext("2d");
+  if (!ctx) return;
+
+  if (window.taskPieChart) window.taskPieChart.destroy();
+
+  window.taskPieChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: [
+        "Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"
+      ],
+      datasets: [
+        {
+          label: "Đã hoàn thành",
+          data: monthlyDone,
+          backgroundColor: "#4CAF50",
+          stack: "stack1"
+        },
+        {
+          label: "Chưa hoàn thành",
+          data: monthlyNotDone,
+          backgroundColor: "#F44336",
+          stack: "stack1"
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false, 
+      plugins: {
+        title: {
+          display: true,
+          text: `Tổng quan công việc của năm ${currentYear}`
+        },
+        legend: {
+          position: "bottom"
+        }
+      },
+      scales: {
+        x: {
+          stacked: true,
+          title: {
+            display: true,
+            text: "Tháng"
+          }
+        },
+        y: {
+          stacked: true,
+          title: {
+            display: true,
+            text: "Số lượng công việc"
+          },
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1,           
+            precision: 0,         
+            callback: function(value) {
+              return Number.isInteger(value) ? value : '';
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
 
 function updateChart(tasks) {
   const currentMonth = new Date().getMonth();
@@ -413,9 +532,9 @@ function updateChart(tasks) {
   const incomplete = tasksInMonth.length - completed;
 
   const ctx = document.getElementById('task-pie-chart')?.getContext('2d');
-  if (!ctx) return; // Nếu chưa render dashboard
+  if (!ctx) return;
 
-  if (taskChart) taskChart.destroy(); // Xoá biểu đồ cũ
+  if (taskChart) taskChart.destroy();
 
   taskChart = new Chart(ctx, {
     type: 'pie',

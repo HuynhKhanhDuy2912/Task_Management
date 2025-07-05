@@ -51,11 +51,25 @@
       </div>
       <div class="main">
         <h3 id="selected-category-title">Select a category</h3>
-        <label for="month-selector">Chọn tháng:</label>
-        <input style="margin-top: 10px;" type="month" id="month-selector" />
-        <canvas id="task-chart" width="300" height="300" style="margin: 20px auto;"></canvas>
+        <div id="month-section">
+          <label for="month-selector">Select month:</label>
+          <input style="margin-top: 10px;" type="month" id="month-selector" />
+        </div>
+        <!-- Biểu đồ tổng quan (cột chồng) -->
+        <div id="overview-chart-container">
+          <canvas id="overview-chart"></canvas>
+        </div>
+
+        <!-- Biểu đồ tròn cho category -->
+        <div id="category-chart-container" class="hidden">
+          <canvas id="category-chart"></canvas>
+        </div>
+
+        
+
         <ul id="task-list"></ul>
         <form id="add-task-form" class="hidden">
+          <div><b>New task</b></div><br/>
           <input type="text" id="task-title" placeholder="Title" required />
           <textarea rows="7" id="task-content" placeholder="Content" required></textarea>
           <table>
