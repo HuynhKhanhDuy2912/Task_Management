@@ -117,13 +117,17 @@ ul li:hover {
 .delete-category-btn {
   background: transparent;
   border: none;
-  color: #dc3545;
+  color: #111111;
   font-size: 1.25rem;
   font-weight: bold;
   padding: 0.25rem;
   cursor: pointer;
-  width: 35px;
+  width: 30px;
   margin: auto;
+}
+
+.delete-category-btn i {
+  font-size: 17px;
 }
 
 .delete-category-btn:hover {
@@ -210,4 +214,21 @@ ul li:hover {
 /* --- Hidden helper --- */
 .hidden {
   display: none;
+}
+
+#overview-chart-container{
+  width: 100%; 
+  max-width: 1000px; 
+  margin: 20px auto; 
+  height: 500px;
+}
+
+#category-chart-container{
+  max-width: 300px; 
+  margin: 10px auto;
+}
+
+#category-chart{
+  height: 250px;
+  width: 250px;
 }
