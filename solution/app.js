@@ -6,6 +6,7 @@ let categories = [];
 let selectedCategory = null;
 let editMode = null;
 let taskChart = null;
+let selectedYear = new Date().getFullYear();
 
 
 function formatDateTime(dateString) {
@@ -167,6 +168,19 @@ function bindEvents(templateId) {
       document.getElementById("category-chart-container").classList.add("hidden");
 
       renderGlobalChartForYear();
+      const prevBtn = document.getElementById("prev-year");
+      const nextBtn = document.getElementById("next-year");
+
+      if (prevBtn && nextBtn) {
+        prevBtn.onclick = () => {
+          selectedYear--;
+          renderGlobalChartForYear();
+        };
+        nextBtn.onclick = () => {
+          selectedYear++;
+          renderGlobalChartForYear();
+        };
+      }
     }
 
 
@@ -425,8 +439,7 @@ function renderChartForCurrentMonth() {
 
 
 async function renderGlobalChartForYear() {
-  const now = new Date();
-  const currentYear = now.getFullYear();
+  const currentYear = selectedYear;
 
   const monthlyDone = Array(12).fill(0);
   const monthlyNotDone = Array(12).fill(0);
@@ -453,6 +466,8 @@ async function renderGlobalChartForYear() {
 
   const ctx = document.getElementById("overview-chart")?.getContext("2d");
   if (!ctx) return;
+
+  document.getElementById("current-year-title").textContent = `Tất cả công việc của năm ${currentYear}`;
 
   if (window.taskPieChart) window.taskPieChart.destroy();
 
@@ -482,10 +497,6 @@ async function renderGlobalChartForYear() {
       responsive: true,
       maintainAspectRatio: false, 
       plugins: {
-        title: {
-          display: true,
-          text: `Tổng quan công việc của năm ${currentYear}`
-        },
         legend: {
           position: "bottom"
         }
