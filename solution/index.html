@@ -3,23 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Task Manager</title>
+  <title>Task Management</title>
   <link rel="icon" type="image/png" href="assets/logo.png" />
   <link rel="stylesheet" href="styles.css" />
-  <!-- Font Awesome CDN -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div id="app"></div>
-
   <template id="login-template">
     <div class="page-center">
       <div class="app-branding">
         <img src="./assets/logo.png" alt="Logo" class="logo" />
-        <span class="app-name">Task Manager</span>
+        <span class="app-name">Task Management</span>
       </div>
-
       <div class="form-container">
         <h2>Login</h2>
         <form id="login-form" class="auth-form">
@@ -36,9 +33,8 @@
     <div class="page-center">
       <div class="app-branding">
         <img src="./assets/logo.png" alt="Logo" class="logo" />
-        <span class="app-name">Task Manager</span>
+        <span class="app-name">Task Management</span>
       </div>
-
       <div class="form-container">
         <h2>Register</h2>
         <form id="register-form" class="auth-form">
@@ -51,9 +47,6 @@
       </div>
     </div>
   </template>
-
-
-
 
   <template id="dashboard-template">
     <div class="dashboard">
@@ -72,7 +65,7 @@
           <label for="month-selector">Select month:</label>
           <input style="margin-top: 10px;" type="month" id="month-selector" />
         </div>
-        <!-- Biểu đồ tổng quan (cột chồng) -->
+
         <div id="overview-chart-container">
           <div id="year-nav" class="year-nav">
             <button id="prev-year" class="year-btn"><i class="fas fa-chevron-left"></i></button>
@@ -82,12 +75,10 @@
           <canvas id="overview-chart"></canvas>
         </div>
 
-        <!-- Biểu đồ tròn cho category -->
         <div id="category-chart-container" class="hidden">
           <canvas id="category-chart"></canvas>
         </div>
 
-    
         <ul id="task-list"></ul>
         <form id="add-task-form" class="hidden">
           <div><b>New task</b></div><br/>

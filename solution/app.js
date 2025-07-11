@@ -107,7 +107,7 @@ function bindEvents(templateId) {
         return;
       }
 
-      const taskData = { title, content, startTime, endTime, done };
+      const taskData = { title, content, startTime, endTime, done,  categoryId: selectedCategory._id };
 
       try {
         if (editMode) {

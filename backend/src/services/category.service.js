@@ -16,7 +16,8 @@ exports.addTask = async (userId, catId, data) => {
 
   const task = await Task.create({
     ...data,
-    category: catId
+    category: catId,
+    user: userId
   });
 
   cat.tasks = cat.tasks || [];
