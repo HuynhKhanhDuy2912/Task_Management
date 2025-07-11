@@ -1,5 +1,5 @@
 const catService = require('../services/category.service');
-const Task = require('../models/Task'); // ✅ Thêm dòng này vào đầu file
+const Task = require('../models/Task');
 const mongoose = require('mongoose');
 
 exports.createCategory = async (req, res, next) => {
@@ -29,7 +29,6 @@ exports.deleteTask = async (req, res) => {
   try {
     const { id: categoryId, tid: taskId } = req.params;
 
-    // Ép kiểu ObjectId để so sánh đúng trong MongoDB
     const task = await Task.findOneAndDelete({
       _id: new mongoose.Types.ObjectId(taskId),
       category: new mongoose.Types.ObjectId(categoryId)
@@ -51,13 +50,13 @@ exports.updateTask = async (req, res, next) => {
   try {
     const task = await catService.updateTaskStatus(
       req.user.id,
-      req.params.id,     // categoryId
-      req.params.tid,    // ✅ taskId (phải là .tid, KHÔNG phải .taskId)
+      req.params.id,     
+      req.params.tid,    
       req.body.done
     );
     res.json(task);
   } catch (err) {
-    next(err);  // Bạn có thể log ra console cho rõ hơn nếu cần
+    next(err); 
   }
 };
 

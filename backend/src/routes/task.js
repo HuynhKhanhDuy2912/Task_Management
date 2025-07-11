@@ -3,12 +3,16 @@ const router = express.Router();
 const Task = require('../models/Task');
 const auth = require('../middleware/auth.middleware');
 
-// POST /api/tasks - Tạo mới một task
 router.post('/', auth, async (req, res) => {
   try {
+
     const { title, content, startTime, endTime, done, categoryId } = req.body;
 
-    // Kiểm tra trường bắt buộc
+    if (!req.user?.id) {
+      console.error("Thiếu user id trong req");
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
     if (!title || !startTime || !endTime || !categoryId) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
@@ -20,6 +24,7 @@ router.post('/', auth, async (req, res) => {
       endTime,
       done: done || false,
       category: categoryId,
+      user: req.user.id
     });
 
     await newTask.save();
