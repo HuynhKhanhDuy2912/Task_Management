@@ -48,17 +48,34 @@ exports.deleteTask = async (req, res) => {
 
 exports.updateTask = async (req, res, next) => {
   try {
-    const task = await catService.updateTaskStatus(
-      req.user.id,
-      req.params.id,     
-      req.params.tid,    
-      req.body.done
+    const { id: categoryId, tid: taskId } = req.params;
+    const { title, content, startTime, endTime, done } = req.body;
+
+    const task = await Task.findOneAndUpdate(
+      {
+        _id: taskId,
+        category: categoryId,
+      },
+      {
+        title,
+        content,
+        startTime,
+        endTime,
+        done,
+      },
+      { new: true } // trả về bản ghi sau khi cập nhật
     );
+
+    if (!task) {
+      return res.status(404).json({ message: 'Task not found or does not belong to the specified category' });
+    }
+
     res.json(task);
   } catch (err) {
-    next(err); 
+    next(err);
   }
 };
+
 
 exports.getCategories = async (req, res, next) => {
   try {

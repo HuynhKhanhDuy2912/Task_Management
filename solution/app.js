@@ -1,6 +1,9 @@
 const API_URL = 'http://localhost:5000/api';
 const app = document.getElementById("app");
 
+
+
+
 let token = localStorage.getItem('token');
 let categories = [];
 let selectedCategory = null;
@@ -106,8 +109,13 @@ function bindEvents(templateId) {
         alert("Please fill in all fields.");
         return;
       }
+      if (new Date(endTime) <= new Date(startTime)) {
+        alert("Ngày kết thúc phải **sau** ngày bắt đầu.");
+        return;
+      }
 
-      const taskData = { title, content, startTime, endTime, done,  categoryId: selectedCategory._id };
+
+      const taskData = { title, content, startTime, endTime, done, categoryId: selectedCategory._id };
 
       try {
         if (editMode) {
@@ -153,7 +161,7 @@ function bindEvents(templateId) {
       document.getElementById("selected-category-title").textContent = selectedCategory.name;
       document.getElementById("add-task-form").classList.remove("hidden");
       if (monthSection) monthSection.style.display = "block";
-      
+
       document.getElementById("overview-chart-container").classList.add("hidden");
       document.getElementById("category-chart-container").classList.remove("hidden");
 
@@ -204,7 +212,7 @@ async function loadCategories() {
     const data = await res.json();
     categories = data;
 
-    selectedCategory = null; 
+    selectedCategory = null;
 
     render("dashboard-template");
 
@@ -227,11 +235,11 @@ async function loadTasksByCategory(categoryId, rerender = true) {
       selectedCategory = category;
     }
 
-    if (rerender){
+    if (rerender) {
       render("dashboard-template");
       displayTasks();
       renderChartForCurrentMonth();
-    } 
+    }
   } catch (err) {
     alert("Failed to load tasks: " + err.message);
   }
@@ -495,7 +503,7 @@ async function renderGlobalChartForYear() {
     },
     options: {
       responsive: true,
-      maintainAspectRatio: false, 
+      maintainAspectRatio: false,
       plugins: {
         legend: {
           position: "bottom"
@@ -517,9 +525,9 @@ async function renderGlobalChartForYear() {
           },
           beginAtZero: true,
           ticks: {
-            stepSize: 1,           
-            precision: 0,         
-            callback: function(value) {
+            stepSize: 1,
+            precision: 0,
+            callback: function (value) {
               return Number.isInteger(value) ? value : '';
             }
           }
