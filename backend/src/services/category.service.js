@@ -14,6 +14,11 @@ exports.addTask = async (userId, catId, data) => {
   const cat = await Category.findOne({ _id: catId, user: userId });
   if (!cat) throw new Error('Category not found');
 
+  const { startTime, endTime } = data;
+  if (new Date(endTime) <= new Date(startTime)) {
+    throw new Error('End time must be after start time');
+  }
+
   const task = await Task.create({
     ...data,
     category: catId,
@@ -58,3 +63,21 @@ exports.updateTaskStatus = async (userId, catId, taskId, done) => {
 exports.getCategories = async (userId) => {
   return await Category.find({ user: userId }).populate('tasks');
 };
+// Sửa toàn bộ nội dung task
+exports.updateTaskDetails = async (userId, catId, taskId, updatedData) => {
+  const { startTime, endTime } = updatedData;
+  if (startTime && endTime && new Date(endTime) <= new Date(startTime)) {
+    throw new Error('End time must be after start time');
+  }
+
+  const task = await Task.findOneAndUpdate(
+    { _id: taskId, category: catId, user: userId },
+    updatedData,
+    { new: true }
+  );
+
+  if (!task) throw new Error('Task not found or you do not have permission');
+  return task;
+};
+
+
