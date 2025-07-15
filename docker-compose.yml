@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: task_backend
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./backend/.env       
+    environment:
+      - TZ=Asia/Ho_Chi_Minh 
+    depends_on:
+      - mongo
+    volumes:
+      - ./backend:/app
+    restart: always
+
+  frontend:
+    build: ./solution
+    container_name: task_frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    volumes:
+      - ./solution:/app
+    restart: always
+
+  mongo:
+    image: mongo:6
+    container_name: task_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    restart: always
+
+volumes:
+  mongo_data:
