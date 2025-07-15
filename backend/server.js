@@ -17,7 +17,8 @@ connectDB();
 startEmailReminderJob();
 
 //Middleware
-app.use(cors({ origin: 'http://127.0.0.1:5500' }));
+// app.use(cors({ origin: 'http://127.0.0.1:5500' }));
+app.use(cors({ origin: 'http://localhost:3000' }));
 app.use(express.json());
 
 //Swagger
