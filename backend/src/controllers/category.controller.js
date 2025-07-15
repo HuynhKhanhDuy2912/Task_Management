@@ -63,7 +63,7 @@ exports.updateTask = async (req, res, next) => {
         endTime,
         done,
       },
-      { new: true } // trả về bản ghi sau khi cập nhật
+      { new: true } 
     );
 
     if (!task) {

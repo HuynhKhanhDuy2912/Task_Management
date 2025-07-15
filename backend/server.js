@@ -8,6 +8,9 @@ const catRoutes  = require('./src/routes/category.routes');
 const taskRoutes = require('./src/routes/task');
 const startEmailReminderJob = require('./src/cron/emailReminder.cron');
 
+const { swaggerUi, swaggerSpec } = require('./src/config/swagger');
+
+
 const app = express();
 connectDB();
 
@@ -16,6 +19,9 @@ startEmailReminderJob();
 //Middleware
 app.use(cors({ origin: 'http://127.0.0.1:5500' }));
 app.use(express.json());
+
+//Swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 //Route
 app.use('/api/auth', authRoutes);            
@@ -40,7 +46,7 @@ const Task = require('./src/models/Task');
 const User = require('./src/models/User');
 
 //Chạy mỗi 15 phút
-cron.schedule('*/15 * * * *', async () => {
+cron.schedule('* * * * *', async () => {
   const now = new Date();
   const nextHour = new Date(now.getTime() + 60 * 60 * 1000);
 

@@ -1,18 +1,3 @@
-# # Node.js dependencies
+# Node.js dependencies
 # node_modules/
 
-# # Thông tin môi trường (không nên public)
-# .env
-
-# # Logs
-# logs
-# *.log
-# npm-debug.log*
-
-# # IDE/editor files
-# .vscode/
-# *.swp
-
-# # Hệ điều hành
-# .DS_Store
-# Thumbs.db

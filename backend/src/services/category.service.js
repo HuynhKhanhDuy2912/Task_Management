@@ -32,7 +32,7 @@ exports.addTask = async (userId, catId, data) => {
   return task;
 };
 
-// ✅ Xóa task trong category (đã sửa chặt chẽ)
+// Xóa task trong category
 exports.deleteTask = async (userId, catId, taskId) => {
   const task = await Task.findOneAndDelete({ _id: taskId, category: catId });
 

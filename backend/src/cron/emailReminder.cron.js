@@ -5,7 +5,7 @@ const User = require('../models/User');
 
 module.exports = function startEmailReminderJob() {
   cron.schedule('* * * * *', async () => {
-    console.log('🕒 Cron job: Đang kiểm tra công việc sắp hết hạn...');
+    // console.log('Cron job: Đang kiểm tra công việc sắp hết hạn...');
 
     const now = new Date();
     const nextHour = new Date(now.getTime() + 60 * 60 * 1000);
@@ -21,10 +21,10 @@ module.exports = function startEmailReminderJob() {
         await sendDeadlineReminder(user.email, task);
         task.notified = true;
         await task.save();
-        console.log(`📧 Đã gửi mail cho ${user.email} về công việc "${task.title}"`);
+        console.log(`Đã gửi mail cho ${user.email} về công việc "${task.title}"`);
       }
     }
 
-    console.log('✅ Cron job hoàn tất.\n');
+    // console.log('Cron job hoàn tất.\n');
   });
 };
