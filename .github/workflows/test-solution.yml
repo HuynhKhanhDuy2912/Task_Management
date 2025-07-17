@@ -1,0 +1,21 @@
+name: CI - Frontend (JS thuần)
+
+on:
+  push:
+    paths:
+      - 'solution/**'
+  pull_request:
+    paths:
+      - 'solution/**'
+
+jobs:
+  test-frontend:
+    name: Frontend Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Kiểm tra file frontend (JS thuần)
+        run: echo "No automated tests. This is pure JS. Manual testing recommended."

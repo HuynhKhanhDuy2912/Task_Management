@@ -46,7 +46,7 @@ const { sendDeadlineReminder } = require('./emailService');
 const Task = require('./src/models/Task');
 const User = require('./src/models/User');
 
-//Chạy mỗi 15 phút
+//Chạy mỗi 1 phút
 cron.schedule('* * * * *', async () => {
   const now = new Date();
   const nextHour = new Date(now.getTime() + 60 * 60 * 1000);
